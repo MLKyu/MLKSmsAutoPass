@@ -31,6 +31,11 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
+
     <TextView
         android:id="@+id/phonenumber_list_row_text_enable"
         android:layout_width="wrap_content"

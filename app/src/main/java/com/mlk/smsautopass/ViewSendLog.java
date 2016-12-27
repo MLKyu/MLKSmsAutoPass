@@ -38,12 +38,6 @@ public class ViewSendLog extends AppCompatActivity {
         }
     };
     private TextView listEmpty;
-    AdapterView.OnItemLongClickListener listLongClick = new AdapterView.OnItemLongClickListener() {
-        public boolean onItemLongClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong) {
-            dialogListLongClick(paramAnonymousInt);
-            return false;
-        }
-    };
     private ListView listView;
     private ArrayList<SendLogInfo> objects;
     private TextView pPhoneNumber, pProfileName, pRecentTime, pRules, pImgEnabled;
@@ -75,8 +69,8 @@ public class ViewSendLog extends AppCompatActivity {
         }
         Button localButton1 = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_ok);
         Button localButton2 = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_cancel);
-        localButton1.setBackgroundColor(Color.alpha(0));
-        localButton2.setBackgroundColor(Color.alpha(0));
+//        localButton1.setBackgroundColor(Color.alpha(0));
+//        localButton2.setBackgroundColor(Color.alpha(0));
         localButton1.setOnTouchListener(this.touch);
         localButton2.setOnTouchListener(this.touch);
         localButton1.setOnClickListener(new View.OnClickListener() {
@@ -149,21 +143,21 @@ public class ViewSendLog extends AppCompatActivity {
         new Button(getApplicationContext());
         Button localButton1 = (Button) localView.findViewById(R.id.delete_dialog_btn1);
         Button localButton2 = (Button) localView.findViewById(R.id.delete_dialog_btn2);
-        localButton1.setBackgroundColor(Color.alpha(0));
-        localButton2.setBackgroundColor(Color.alpha(0));
+//        localButton1.setBackgroundColor(Color.alpha(0));
+//        localButton2.setBackgroundColor(Color.alpha(0));
         localButton1.setOnTouchListener(this.touch);
         localButton2.setOnTouchListener(this.touch);
         localButton1.setText("방금 선택한 이력 삭제");
         localButton2.setText("전체 전송 이력 삭제");
         localButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
-                ViewSendLog.this.deleteCheckDialog(paramInt, 1);
+                deleteCheckDialog(paramInt, 1);
                 localDialog.cancel();
             }
         });
         localButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
-                ViewSendLog.this.deleteCheckDialog(paramInt, 2);
+                deleteCheckDialog(paramInt, 2);
                 localDialog.cancel();
             }
         });
@@ -216,7 +210,7 @@ public class ViewSendLog extends AppCompatActivity {
         this.pRules.setText(rule);
 
         String str;
-        if (this.pRecentTime != null) {
+        if (this.recentTime != null) {
             str = "최근 전달 내역: " + this.recentTime;
         } else {
             str = "(최근 전달 내역 없음)";

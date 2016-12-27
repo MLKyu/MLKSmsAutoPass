@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,9 +25,6 @@ import java.util.ArrayList;
  */
 
 public class PhoneNumberSetRules extends AppCompatActivity {
-
-    private static final int DELETE_ALL = 2;
-    private static final int DELETE_SELECT = 1;
     private ArrayList<String> arrayRules = new ArrayList();
     private Button btnRule;
     View.OnClickListener click = new View.OnClickListener() {
@@ -57,8 +53,7 @@ public class PhoneNumberSetRules extends AppCompatActivity {
     };
     private TextView listEmpty;
     private ListView listView;
-    private ImageView pImgEnabled;
-    private TextView pPhoneNumber;
+    private TextView pPhoneNumber, pImgEnabled;
     private TextView pProfileName;
     private TextView pRecentTime;
     private TextView pRules;
@@ -83,7 +78,7 @@ public class PhoneNumberSetRules extends AppCompatActivity {
     };
 
     private void deleteCheckDialog(final int paramInt1, final int paramInt2) {
-        final Dialog localDialog = new Dialog(this, R.style.AppTheme);
+        final Dialog localDialog = new Dialog(this);
         View localView = getLayoutInflater().inflate(R.layout.deletecheck_dialog, null);
         TextView title = (TextView) localView.findViewById(R.id.deletecheck_dialog_title);
 
@@ -95,8 +90,8 @@ public class PhoneNumberSetRules extends AppCompatActivity {
 
         Button btnOk = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_ok);
         Button btnCancel = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_cancel);
-        btnOk.setBackgroundColor(Color.alpha(0));
-        btnCancel.setBackgroundColor(Color.alpha(0));
+//        btnOk.setBackgroundColor(Color.alpha(0));
+//        btnCancel.setBackgroundColor(Color.alpha(0));
         btnOk.setOnTouchListener(this.touch);
         btnCancel.setOnTouchListener(this.touch);
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +154,17 @@ public class PhoneNumberSetRules extends AppCompatActivity {
     }
 
     private void listItemDialog(final int paramInt) {
-        final Dialog localDialog = new Dialog(this, R.style.AppTheme);
+        final Dialog localDialog = new Dialog(this);
         View localView = getLayoutInflater().inflate(R.layout.delete_dialog, null);
-        new Button(getApplicationContext());
+
         Button localButton1 = (Button) localView.findViewById(R.id.delete_dialog_btn1);
         Button localButton2 = (Button) localView.findViewById(R.id.delete_dialog_btn2);
-        localButton1.setBackgroundColor(Color.alpha(0));
-        localButton2.setBackgroundColor(Color.alpha(0));
+//        localButton1.setBackgroundColor(Color.alpha(0));
+//        localButton2.setBackgroundColor(Color.alpha(0));
         localButton1.setOnTouchListener(this.touch);
         localButton2.setOnTouchListener(this.touch);
+        localButton1.setText("방금 선택한 규칙 삭제");
+        localButton2.setText("전체 규칙 삭제");
         localButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
                 deleteCheckDialog(paramInt, 1);
@@ -204,17 +201,9 @@ public class PhoneNumberSetRules extends AppCompatActivity {
 
         this.pProfileName = ((TextView) findViewById(R.id.activity_rules_list_text_profile));
         this.pPhoneNumber = ((TextView) findViewById(R.id.activity_rules_list_text_phonenumber));
-        this.pImgEnabled = ((ImageView) findViewById(R.id.activity_rules_list_img_enable));
+        this.pImgEnabled = ((TextView) findViewById(R.id.activity_rules_list_img_enable));
         this.pRules = ((TextView) findViewById(R.id.activity_rules_list_text_rules));
         this.pRecentTime = ((TextView) findViewById(R.id.activity_rules_list_text_recenttime));
-
-//        Drawable drawable;
-//        if (Boolean.valueOf(this.isEnabled).booleanValue()) {
-//            drawable = getResources().getDrawable(status_on);
-//        } else {
-//            drawable = getResources().getDrawable(status_off);
-//        }
-//        this.pImgEnabled.setImageDrawable(drawable);
 
         if (this.recentTime == null) {
             recentTime = "최근 전달 내역: " + this.recentTime;
@@ -225,6 +214,12 @@ public class PhoneNumberSetRules extends AppCompatActivity {
 
         this.pProfileName.setText("@" + this.profileName);
         this.pPhoneNumber.setText(this.phoneNumber);
+
+        if (this.isEnabled.equals("true")) {
+            this.pImgEnabled.setText("사용함");
+        } else {
+            this.pImgEnabled.setText("사용 안함");
+        }
 
         this.listEmpty = ((TextView) findViewById(R.id.activity_rules_list_text_listempty));
         this.listEmpty.setVisibility(View.VISIBLE);

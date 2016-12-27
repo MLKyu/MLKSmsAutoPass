@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class SMSReceiver extends BroadcastReceiver {
     static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
-    static final String logTag = "SmsReceiver";
+
     private ArrayList<PhoneNumberInfo> arrayPhoneNumber = new ArrayList();
     private DBPhoneNumberAdapter dbPhoneNumberAdapter;
     private DBSendLogAdapter dbSendLogAdapter;
@@ -34,8 +34,8 @@ public class SMSReceiver extends BroadcastReceiver {
     private ArrayList<PhoneNumberInfo> getPhoneNumberList() {
         this.arrayPhoneNumber.clear();
         Cursor localCursor = this.dbPhoneNumberAdapter.fetchAll();
-        if (localCursor.getCount() != 0) {
-            while (localCursor.moveToNext()) {
+        if (localCursor.moveToFirst()) {
+            do {
                 int i = localCursor.getInt(0);
                 String str1 = localCursor.getString(1);
                 String str2 = localCursor.getString(2);
@@ -43,7 +43,7 @@ public class SMSReceiver extends BroadcastReceiver {
                 String str3 = localCursor.getString(4);
                 String str4 = localCursor.getString(5);
                 this.arrayPhoneNumber.add(new PhoneNumberInfo(i, str1, str2, bool, str3, str4));
-            }
+            } while (localCursor.moveToNext());
         }
         return this.arrayPhoneNumber;
     }
@@ -90,6 +90,6 @@ public class SMSReceiver extends BroadcastReceiver {
         localObject = new SimpleDateFormat("yyyy-MM-dd (E) HH:mm:ss", new Locale("ko", "KOREA")).format((Date) localObject);
         this.dbPhoneNumberAdapter.updateRecentTime(paramPhoneNumberInfo.getId(), (String) localObject);
         this.dbSendLogAdapter.insertSendLog(paramString, paramSmsMessage.getOriginatingAddress(), paramPhoneNumberInfo.getPhoneNumber(), paramSmsMessage.getMessageBody(), (String) localObject, "true");
-        Toast.makeText(paramContext, paramPhoneNumberInfo.getPhoneNumber() + "번호로\n" + paramString + "규칙 문자\n전송 완료", 1).show();
+        Toast.makeText(paramContext, paramPhoneNumberInfo.getPhoneNumber() + "번호로\n" + paramString + "규칙 문자\n전송 완료", Toast.LENGTH_LONG).show();
     }
 }

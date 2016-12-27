@@ -8,11 +8,13 @@
     <Button
         android:id="@+id/delete_dialog_btn1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="선택 삭제" />
 
     <Button
         android:id="@+id/delete_dialog_btn2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="리스트 전체 삭제" />
 
 </LinearLayout>

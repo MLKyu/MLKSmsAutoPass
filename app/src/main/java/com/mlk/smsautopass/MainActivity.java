@@ -83,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
         Button btnOk = (Button) localView.findViewById(R.id.add_dialog_btn_ok);
         Button btnCancel = (Button) localView.findViewById(R.id.add_dialog_btn_cancel);
         btnOk.setText(str1);
-        btnOk.setBackgroundColor(Color.alpha(0));
-        btnCancel.setBackgroundColor(Color.alpha(0));
+//        btnOk.setBackgroundColor(Color.alpha(0));
+//        btnCancel.setBackgroundColor(Color.alpha(0));
         btnOk.setOnTouchListener(this.touch);
         btnCancel.setOnTouchListener(this.touch);
         btnOk.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
-                LogUtil.d("");
                 if (paramInt1 == 1) {
                     dbPhoneNumberAdapter.insertPhoneNumber(editPhoneNumber.getText().toString(), editProfileName.getText().toString());
                 } else if (paramInt1 == 2) {
@@ -116,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) localView.findViewById(R.id.deletecheck_dialog_title)).setText("해당 전화번호 정보를\n정말로 삭제하시겠습니까?");
         Button localButton1 = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_ok);
         Button localButton2 = (Button) localView.findViewById(R.id.deletecheck_dialog_btn_cancel);
-        localButton1.setBackgroundColor(Color.alpha(0));
-        localButton2.setBackgroundColor(Color.alpha(0));
+//        localButton1.setBackgroundColor(Color.alpha(0));
+//        localButton2.setBackgroundColor(Color.alpha(0));
         localButton1.setOnTouchListener(this.touch);
         localButton2.setOnTouchListener(this.touch);
         localButton1.setOnClickListener(new View.OnClickListener() {
@@ -146,12 +145,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ListAdapter getPhoneNumberList() {
-        LogUtil.d("");
         this.arrayPhoneNumber.clear();
         this.cursor = this.dbPhoneNumberAdapter.fetchAll();
         if (this.cursor.moveToFirst()) {
             do {
-                LogUtil.d("");
                 int i = this.cursor.getInt(0);
                 String str1 = this.cursor.getString(1);
                 String str2 = this.cursor.getString(2);
@@ -161,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 this.arrayPhoneNumber.add(new PhoneNumberInfo(i, str1, str2, bool, str3, str4));
             } while (this.cursor.moveToNext());
 
-            LogUtil.d("");
             this.listAdapter = new ListAdapter(this.arrayPhoneNumber);
 
             this.listEmpty.setVisibility(View.GONE);
@@ -181,24 +177,17 @@ public class MainActivity extends AppCompatActivity {
         Button localButton4 = (Button) localView.findViewById(R.id.listmenu_dialog_btn4);
         Button localButton5 = (Button) localView.findViewById(R.id.listmenu_dialog_btn5);
         final boolean bool = ((PhoneNumberInfo) this.objects.get(paramInt)).isEnabled();
-//        Drawable localDrawable;
         if (bool) {
             localButton1.setText("사용하지 않음");
-//            localDrawable = getResources().getDrawable(status_off_s);
-//            localDrawable.setBounds(0, 0, localDrawable.getIntrinsicWidth(), localDrawable.getIntrinsicHeight());
-//            localButton1.setCompoundDrawables(localDrawable, null, null, null);
         } else {
             localButton1.setText("사용함");
-//            localDrawable = getResources().getDrawable(status_on_s);
-//            localDrawable.setBounds(0, 0, localDrawable.getIntrinsicWidth(), localDrawable.getIntrinsicHeight());
-//            localButton1.setCompoundDrawables(localDrawable, null, null, null);
         }
 
-        localButton1.setBackgroundColor(Color.alpha(0));
-        localButton2.setBackgroundColor(Color.alpha(0));
-        localButton3.setBackgroundColor(Color.alpha(0));
-        localButton4.setBackgroundColor(Color.alpha(0));
-        localButton5.setBackgroundColor(Color.alpha(0));
+//        localButton1.setBackgroundColor(Color.alpha(0));
+//        localButton2.setBackgroundColor(Color.alpha(0));
+//        localButton3.setBackgroundColor(Color.alpha(0));
+//        localButton4.setBackgroundColor(Color.alpha(0));
+//        localButton5.setBackgroundColor(Color.alpha(0));
         localButton1.setOnTouchListener(this.touch);
         localButton2.setOnTouchListener(this.touch);
         localButton3.setOnTouchListener(this.touch);
@@ -374,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
                 textRules.setText(rules);
 
                 String recentTime;
-                if (((PhoneNumberInfo) localObject).getRecentTime() == null) {
+                if (((PhoneNumberInfo) localObject).getRecentTime() != null) {
                     recentTime = "최근 전달 내역: " + ((PhoneNumberInfo) localObject).getRecentTime();
                 } else {
                     recentTime = "(최근 전달 내역 없음)";
