@@ -1,7 +1,6 @@
 package com.mlk.smsautopass;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -13,15 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mlk.smsautopass.sql.DBPhoneNumberAdapter;
 import com.mlk.smsautopass.sql.DBSendLogAdapter;
+import com.mlk.smsautopass.util.LogUtil;
 import com.mlk.smsautopass.vo.PhoneNumberInfo;
 
 import java.util.ArrayList;
@@ -35,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Cursor cursor;
     private DBPhoneNumberAdapter dbPhoneNumberAdapter;
     private DBSendLogAdapter dbSendLogAdapter;
-    private EditText editPhoneNumber;
-    private EditText editProfileName;
-    private ImageView imgEnabled;
+    private EditText editPhoneNumber, editProfileName;
     private ListAdapter listAdapter;
     AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong) {
@@ -47,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView listEmpty;
     private ListView listView;
     private ArrayList<PhoneNumberInfo> objects;
-    private TextView textPhoneNumber;
-    private TextView textProfileName;
-    private TextView textRecentTime;
-    private TextView textRules;
+    private TextView textPhoneNumber, textProfileName, textRecentTime, textRules, imgEnabled;
+
     View.OnTouchListener touch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -66,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void addPhoneNumberDialog(final int paramInt1, final int paramInt2, String paramString1, String paramString2) {
+        LogUtil.d("");
         final Dialog localDialog = new Dialog(this);
         View localView = getLayoutInflater().inflate(R.layout.add_dialog, null);
         String str2 = null;
@@ -93,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         btnCancel.setOnTouchListener(this.touch);
         btnOk.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
+                LogUtil.d("");
                 if (paramInt1 == 1) {
                     dbPhoneNumberAdapter.insertPhoneNumber(editPhoneNumber.getText().toString(), editProfileName.getText().toString());
                 } else if (paramInt1 == 2) {
@@ -149,10 +146,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ListAdapter getPhoneNumberList() {
+        LogUtil.d("");
         this.arrayPhoneNumber.clear();
         this.cursor = this.dbPhoneNumberAdapter.fetchAll();
         if (this.cursor.moveToFirst()) {
             do {
+                LogUtil.d("");
                 int i = this.cursor.getInt(0);
                 String str1 = this.cursor.getString(1);
                 String str2 = this.cursor.getString(2);
@@ -162,9 +161,10 @@ public class MainActivity extends AppCompatActivity {
                 this.arrayPhoneNumber.add(new PhoneNumberInfo(i, str1, str2, bool, str3, str4));
             } while (this.cursor.moveToNext());
 
-            this.listEmpty.setVisibility(View.INVISIBLE);
-            this.listAdapter = new ListAdapter(this, R.layout.phonenumber_list_row, this.arrayPhoneNumber);
-            this.listAdapter.notifyDataSetChanged();
+            LogUtil.d("");
+            this.listAdapter = new ListAdapter(this.arrayPhoneNumber);
+
+            this.listEmpty.setVisibility(View.GONE);
         } else {
             this.listEmpty.setVisibility(View.VISIBLE);
         }
@@ -172,10 +172,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void listItemDialog(final int paramInt) {
-        final Dialog localDialog = new Dialog(this, R.style.AppTheme);
+        final Dialog localDialog = new Dialog(this);
         View localView = getLayoutInflater().inflate(R.layout.listmenu_dialog, null);
         new Button(getApplicationContext());
-        Button localButton1 = (Button) localView.findViewById(R.id.listmenu_dialog_btn1);
+        final Button localButton1 = (Button) localView.findViewById(R.id.listmenu_dialog_btn1);
         Button localButton2 = (Button) localView.findViewById(R.id.listmenu_dialog_btn2);
         Button localButton3 = (Button) localView.findViewById(R.id.listmenu_dialog_btn3);
         Button localButton4 = (Button) localView.findViewById(R.id.listmenu_dialog_btn4);
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         localButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
                 Intent intent = new Intent(MainActivity.this, PhoneNumberSetRules.class);
-                intent.putExtra("id", String.valueOf(((PhoneNumberInfo) objects.get(paramInt)).getId()));
+                intent.putExtra("id", ((PhoneNumberInfo) objects.get(paramInt)).getId());
                 intent.putExtra("phoneNumber", formatPhoneNumber(((PhoneNumberInfo) objects.get(paramInt)).getPhoneNumber()));
                 intent.putExtra("profileName", ((PhoneNumberInfo) objects.get(paramInt)).getProfileName());
                 intent.putExtra("enabled", String.valueOf(((PhoneNumberInfo) objects.get(paramInt)).isEnabled()));
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         localButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
                 Intent intent = new Intent(MainActivity.this, ViewSendLog.class);
-                intent.putExtra("id", String.valueOf(((PhoneNumberInfo) objects.get(paramInt)).getId()));
+                intent.putExtra("id", ((PhoneNumberInfo) objects.get(paramInt)).getId());
                 intent.putExtra("phoneNumber", formatPhoneNumber(((PhoneNumberInfo) objects.get(paramInt)).getPhoneNumber()));
                 intent.putExtra("profileName", ((PhoneNumberInfo) objects.get(paramInt)).getProfileName());
                 intent.putExtra("enabled", String.valueOf(((PhoneNumberInfo) objects.get(paramInt)).isEnabled()));
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
         localButton4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramAnonymousView) {
-                addPhoneNumberDialog(2, ((PhoneNumberInfo) objects.get(paramInt)).getId(), ((PhoneNumberInfo) objects.get(paramInt)).getPhoneNumber(), ((PhoneNumberInfo) objects.get(paramInt)).getProfileName());
+                addPhoneNumberDialog(2, objects.get(paramInt).getId(), objects.get(paramInt).getPhoneNumber(), objects.get(paramInt).getProfileName());
                 refreshList();
                 localDialog.cancel();
             }
@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshList() {
+        LogUtil.d("");
         this.listView.setAdapter(getPhoneNumberList());
     }
 
@@ -274,12 +275,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
         setContentView(R.layout.activity_phonenumber_list);
+
         this.dbPhoneNumberAdapter = new DBPhoneNumberAdapter(this);
         this.dbPhoneNumberAdapter.open();
+
         this.dbSendLogAdapter = new DBSendLogAdapter(this);
         this.dbSendLogAdapter.open();
+
         this.listEmpty = ((TextView) findViewById(R.id.activity_phonenumber_list_empty));
-        this.listEmpty.setVisibility(View.VISIBLE);
+        this.listEmpty.setVisibility(View.GONE);
+
         this.listView = ((ListView) findViewById(R.id.activity_phonenumber_list_listview));
         this.listView.setOnItemClickListener(this.listClick);
         refreshList();
@@ -311,39 +316,54 @@ public class MainActivity extends AppCompatActivity {
         refreshList();
     }
 
-    private class ListAdapter extends ArrayAdapter {
-        public ListAdapter(Context paramContext, int paramInt, ArrayList paramArrayList) {
-            super(paramContext, paramInt, paramArrayList);
-            objects = paramArrayList;
+    private class ListAdapter extends BaseAdapter {
+
+        public ListAdapter(final ArrayList<PhoneNumberInfo> list) {
+            objects = list;
         }
 
-        public View getView(int paramInt, View paramView, ViewGroup paramViewGroup) {
-            View v = paramView;
-            if (v == null) {
-                v = getLayoutInflater().inflate(R.layout.phonenumber_list_row, null);
+        @Override
+        public int getCount() {
+            return objects.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return objects.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            LogUtil.d("");
+            if (view == null) {
+                view = getLayoutInflater().inflate(R.layout.phonenumber_list_row, null);
             }
-            Object localObject = (PhoneNumberInfo) objects.get(paramInt);
+            Object localObject = getItem(i);
             if (localObject != null) {
-                textProfileName = ((TextView) v.findViewById(R.id.phonenumber_list_row_text_profilename));
-                textPhoneNumber = ((TextView) v.findViewById(R.id.phonenumber_list_row_text_phonenumber));
+                LogUtil.d("");
+                textProfileName = ((TextView) view.findViewById(R.id.phonenumber_list_row_text_profilename));
+                textPhoneNumber = ((TextView) view.findViewById(R.id.phonenumber_list_row_text_phonenumber));
 
-//                imgEnabled = ((ImageView) v.findViewById(R.id.phonenumber_list_row_img_enable));
+                imgEnabled = ((TextView) view.findViewById(R.id.phonenumber_list_row_text_enable));
 
-                textRules = ((TextView) v.findViewById(R.id.phonenumber_list_row_text_rules));
-                textRecentTime = ((TextView) v.findViewById(R.id.phonenumber_list_row_text_recenttime));
+                textRules = ((TextView) view.findViewById(R.id.phonenumber_list_row_text_rules));
+                textRecentTime = ((TextView) view.findViewById(R.id.phonenumber_list_row_text_recenttime));
 
                 textProfileName.setText("@" + ((PhoneNumberInfo) localObject).getProfileName());
 
                 String phoneNumber = formatPhoneNumber(((PhoneNumberInfo) localObject).getPhoneNumber());
                 textPhoneNumber.setText(phoneNumber);
 
-//                Drawable drawable;
-//                if (!((PhoneNumberInfo) localObject).isEnabled()) {
-//                    drawable = getResources().getDrawable(2130837520);
-//                } else {
-//                    drawable = getResources().getDrawable(2130837522);
-//                }
-//                imgEnabled.setImageDrawable(drawable);
+                if (((PhoneNumberInfo) localObject).isEnabled()) {
+                    imgEnabled.setText("사용함");
+                } else {
+                    imgEnabled.setText("사용하지 않음");
+                }
 
                 String rules;
                 if (((PhoneNumberInfo) localObject).getRules() == null) {
@@ -361,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 textRecentTime.setText(recentTime);
             }
-            return v;
+            return view;
         }
     }
 }

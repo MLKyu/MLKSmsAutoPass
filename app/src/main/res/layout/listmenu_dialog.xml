@@ -12,21 +12,25 @@
     <Button
         android:id="@+id/listmenu_dialog_btn2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="전달 규칙 설정" />
 
     <Button
         android:id="@+id/listmenu_dialog_btn3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="전송 이력" />
 
     <Button
         android:id="@+id/listmenu_dialog_btn4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="전화번호 수정" />
 
     <Button
         android:id="@+id/listmenu_dialog_btn5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="삭제" />
 
 </LinearLayout>

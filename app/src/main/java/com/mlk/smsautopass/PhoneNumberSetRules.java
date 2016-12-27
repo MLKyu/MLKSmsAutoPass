@@ -133,48 +133,10 @@ public class PhoneNumberSetRules extends AppCompatActivity {
 
     }
 
-//    private void dialogListLongClick(final int paramInt) {
-//        AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-//        localBuilder.setTitle("수행할 작업을 선택해주세요.");
-//        DialogInterface.OnClickListener local8 = new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt) {
-//                switch (paramAnonymousInt) {
-//                }
-//                for (; ; ) {
-//                    paramAnonymousDialogInterface.cancel();
-//                    return;
-//                    if (arrayRules.size() == 1) {
-//                        rules = null;
-//                    }
-//                    for (; ; ) {
-//                        dbPhoneNumberAdapter.updateRules(phoneNumberId, rules);
-//                        refreshList();
-//                        break;
-//                        if (paramInt == 0) {
-//                            rules = PhoneNumberSetRules.this.rules.replace((CharSequence) arrayRules.get(paramInt), "");
-//                            rules = PhoneNumberSetRules.this.rules.substring(1, rules.length());
-//                        } else if (arrayRules.size() == paramInt) {
-//                            rules = rules.replace((CharSequence) arrayRules.get(paramInt), "");
-//                            rules = rules.substring(0, rules.length() - 1);
-//                        } else {
-//                            rules = rules.replace((CharSequence) arrayRules.get(paramInt), "");
-//                            rules = rules.replace(",,", ",");
-//                        }
-//                    }
-//                    rules = null;
-//                    dbPhoneNumberAdapter.updateRules(PhoneNumberSetRules.this.phoneNumberId, PhoneNumberSetRules.this.rules);
-//                    refreshList();
-//                }
-//            }
-//        };
-//        localBuilder.setSingleChoiceItems(new CharSequence[]{"규칙 삭제", "규칙 전체 삭제"}, -1, local8);
-//        localBuilder.create().show();
-//    }
-
     private ListAdapter getPhoneNumberRules() {
         this.arrayRules.clear();
         this.cursor = this.dbPhoneNumberAdapter.fetchPhoneNumber(this.phoneNumberId);
-        if (this.cursor.getCount() != 0) {
+        if (this.cursor.moveToFirst()) {
             String rules = this.cursor.getString(4);
             if (rules != null) {
                 this.rules = rules;
@@ -231,11 +193,11 @@ public class PhoneNumberSetRules extends AppCompatActivity {
         super.onCreate(paramBundle);
         setContentView(R.layout.activity_rules_list);
 
-        this.phoneNumberId = Integer.parseInt(paramBundle.getString("id"));
-        this.phoneNumber = paramBundle.getString("phoneNumber");
-        this.profileName = paramBundle.getString("profileName");
-        this.isEnabled = paramBundle.getString("enabled");
-        this.recentTime = paramBundle.getString("recentTime");
+        this.phoneNumberId = getIntent().getIntExtra("id", 0);
+        this.phoneNumber = getIntent().getStringExtra("phoneNumber");
+        this.profileName = getIntent().getStringExtra("profileName");
+        this.isEnabled = getIntent().getStringExtra("enabled");
+        this.recentTime = getIntent().getStringExtra("recentTime");
 
         this.dbPhoneNumberAdapter = new DBPhoneNumberAdapter(this);
         this.dbPhoneNumberAdapter.open();
@@ -300,7 +262,7 @@ public class PhoneNumberSetRules extends AppCompatActivity {
             if (v == null) {
                 v = getLayoutInflater().inflate(R.layout.rules_list_row, null);
             }
-            String rules = (String) arrayRules.get(paramInt);
+            String rules = arrayRules.get(paramInt);
             if (rules != null) {
                 textCount = ((TextView) v.findViewById(R.id.rules_list_row_text_count));
                 textRule = ((TextView) v.findViewById(R.id.rules_list_row_text_rule));
