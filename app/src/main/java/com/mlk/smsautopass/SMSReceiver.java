@@ -83,13 +83,13 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     public void passSMS(Context paramContext, String paramString, PhoneNumberInfo paramPhoneNumberInfo, SmsMessage paramSmsMessage) {
-        Object localObject = PendingIntent.getBroadcast(paramContext, 0, new Intent("SMS_SENT"), 0);
-        PendingIntent localPendingIntent = PendingIntent.getBroadcast(paramContext, 0, new Intent("SMS_DELIVERY"), 0);
-        SmsManager.getDefault().sendTextMessage(paramPhoneNumberInfo.getPhoneNumber(), null, paramSmsMessage.getMessageBody(), (PendingIntent) localObject, localPendingIntent);
-        localObject = new Date();
-        localObject = new SimpleDateFormat("yyyy-MM-dd (E) HH:mm:ss", new Locale("ko", "KOREA")).format((Date) localObject);
-        this.dbPhoneNumberAdapter.updateRecentTime(paramPhoneNumberInfo.getId(), (String) localObject);
-        this.dbSendLogAdapter.insertSendLog(paramString, paramSmsMessage.getOriginatingAddress(), paramPhoneNumberInfo.getPhoneNumber(), paramSmsMessage.getMessageBody(), (String) localObject, "true");
+        PendingIntent sentPI = PendingIntent.getBroadcast(paramContext, 0, new Intent("SMS_SENT"), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(paramContext, 0, new Intent("SMS_DELIVERED"), 0);
+        SmsManager.getDefault().sendTextMessage(paramPhoneNumberInfo.getPhoneNumber(), null, paramSmsMessage.getMessageBody(), sentPI, deliveredPI);
+        Date date = new Date();
+        String sDate = new SimpleDateFormat("yyyy-MM-dd (E) HH:mm:ss", new Locale("ko", "KOREA")).format(date);
+        this.dbPhoneNumberAdapter.updateRecentTime(paramPhoneNumberInfo.getId(), sDate);
+        this.dbSendLogAdapter.insertSendLog(paramString, paramSmsMessage.getOriginatingAddress(), paramPhoneNumberInfo.getPhoneNumber(), paramSmsMessage.getMessageBody(), sDate, "true");
         Toast.makeText(paramContext, paramPhoneNumberInfo.getPhoneNumber() + "번호로\n" + paramString + "규칙 문자\n전송 완료", Toast.LENGTH_LONG).show();
     }
 }
